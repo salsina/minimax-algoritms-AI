@@ -99,14 +99,11 @@ class Player:
         target: (Player obj) the player whos last card is about to be erased
         """
         if (len(target.cards) == 0):
-            # print(f'{target.name} has no more eraseble cards!')
             return
         if (self.erases_remaining > 0):
             self.erases_remaining -= 1
             card = target.cards.pop(-1)
-            # print(f'{self.name} erased {card} from {target.name}\'s deck!')
             return
-        # print(f'{self.name} has no more erases remaining!')
 
     def get_player_cards(self):
         return self.cards
@@ -133,7 +130,6 @@ class Blacksin:
         """ 
         shuffles cards for deck creation
         """
-        # return [19, 16, 7, 9, 20, 11, 15, 17, 6, 4, 3, 21, 18, 2, 8, 13, 14, 12, 5, 10, 1]
         return list(random.sample(range(1, self.deck_count + 1), self.deck_count))
 
     def draw_card(self):
@@ -144,7 +140,6 @@ class Blacksin:
             card = self.deck.pop(0)
             self.seen_cards.append(card)
             return card
-        # print('The deck is empty! ending game...')
         self.opponent.has_stopped = True
         self.player.has_stopped = True
         return -1
@@ -208,8 +203,6 @@ class Blacksin:
             if len(self.deck) > 0:#draw
                 new_game_draw = deepcopy(self)
                 new_game_draw.handle_input("d", new_game_draw.player)
-                # action, point = new_game_draw.next_move(1,depth + 1)
-                # move_points.append(["d",point])
                 action, points[0] = new_game_draw.next_move(1,depth + 1)
                 if points[0] == 1:
                     return "d", 1
@@ -218,8 +211,6 @@ class Blacksin:
             if self.player.erases_remaining > 0 and len(self.player.cards) > 0:#erase self
                 new_game_es = deepcopy(self)
                 new_game_es.handle_input("es", new_game_es.player)
-                # action, point = new_game_es.next_move(1,depth + 1)
-                # move_points.append(["es",point])
                 action, points[2] = new_game_es.next_move(1,depth + 1)
                 if points[2] == 1:
                     return "es", 1
@@ -227,16 +218,12 @@ class Blacksin:
             if self.player.erases_remaining > 0 and len(self.opponent.cards) > 0:#erase opponent
                 new_game_eo = deepcopy(self)
                 new_game_eo.handle_input("eo", new_game_eo.player)
-                # action, point = new_game_eo.next_move(1,depth + 1)
-                # move_points.append(["eo",point])
                 action, points[3] = new_game_eo.next_move(1,depth + 1)
                 if points[3] == 1:
                     return "eo", 1
 
             new_game_stop = deepcopy(self)#stop
             new_game_stop.handle_input("s", new_game_stop.player)
-            # action, point = new_game_stop.next_move(1,depth + 1)
-            # move_points.append(["s",point])
             action, points[1] = new_game_stop.next_move(1,depth + 1)
             if points[1] == 1:
                 return "s", 1
@@ -246,27 +233,12 @@ class Blacksin:
                 return possible_moves[idx], 0
             
             return "d", -1
-
-            # if len(move_points) == 0:
-            #     return "s", self.check_for_winners()
-            
-            # max_point_action =  move_points[0][0]
-            # max_point = move_points[0][1]
-                        
-            # for i in range(1,len(move_points)):
-            #     if move_points[i][1] > max_point: 
-            #         max_point_action = move_points[i][0] 
-            #         max_point = move_points[i][1]
-                    
-            # return max_point_action, max_point
         
         else:
 
             if len(self.deck) > 0:#draw
                 new_game_draw = deepcopy(self)
                 new_game_draw.handle_input("d", new_game_draw.opponent)
-                # action, point = new_game_draw.next_move(0,depth + 1)
-                # move_points.append(["d",point])
                 action, points[0] = new_game_draw.next_move(0,depth + 1)
                 if points[0] == -1:
                     return "d", -1
@@ -275,8 +247,6 @@ class Blacksin:
             if self.opponent.erases_remaining > 0 and len(self.opponent.cards) > 0:#erase self
                 new_game_es = deepcopy(self)
                 new_game_es.handle_input("es", new_game_es.opponent)
-                # action, point = new_game_es.next_move(0,depth + 1)
-                # move_points.append(["es",point])
                 action, points[2] = new_game_es.next_move(0,depth + 1)
                 if points[2] == -1:
                     return "es", -1
@@ -284,16 +254,12 @@ class Blacksin:
             if self.opponent.erases_remaining > 0 and len(self.player.cards) > 0:#erase opponent
                 new_game_eo = deepcopy(self)
                 new_game_eo.handle_input("eo", new_game_eo.opponent)
-                # action, point = new_game_eo.next_move(0,depth + 1)
-                # move_points.append(["eo",point])
                 action, points[3] = new_game_eo.next_move(0,depth + 1)
                 if points[3] == -1:
                     return "eo", -1
             
             new_game_stop = deepcopy(self)#stop
             new_game_stop.handle_input("s", new_game_stop.opponent)
-            # action, point = new_game_stop.next_move(0,depth + 1)
-            # move_points.append(["s",point])
             action, points[1] = new_game_stop.next_move(0,depth + 1)    
             if points[1] == -1:
                 return "s", -1
@@ -303,19 +269,6 @@ class Blacksin:
                 return possible_moves[idx], 0
             
             return "d", 1
-        
-            # if len(move_points) == 0:
-            #     return "s", self.check_for_winners()
-            
-            # min_point_action =  move_points[0][0]
-            # min_point = move_points[0][1]
-            
-            # for i in range(1,len(move_points)):
-            #     if move_points[i][1] < min_point: 
-            #         min_point_action = move_points[i][0] 
-            #         min_point = move_points[i][1]
-                    
-            # return min_point_action, min_point
 
     def get_player_input(self):
 
@@ -339,8 +292,6 @@ class Blacksin:
         -----------
         (int) returns 1 if player wins, 0 if draw and -1 if opponent wins
         """
-        # self.opponent.print_info()
-        # self.player.print_info()
         player_margin = self.player.get_margin()
         opponent_margin = self.opponent.get_margin()
         player_win_condition_1 = opponent_margin < 0 and player_margin >= 0
@@ -350,16 +301,12 @@ class Blacksin:
         opponent_win_condition_1 = player_margin < 0 and opponent_margin >= 0
         opponent_win_condition_2 = opponent_margin >=0 and player_margin >= 0 and player_margin > opponent_margin
         if (player_win_condition_1 or player_win_condition_2):
-            # print(f'the winner is the {self.player.name}!')
             return 1
         elif(draw_condition_1 or draw_condition_2):
-            # print('the game ends in a draw!')
             return 0
         elif(opponent_win_condition_1 or opponent_win_condition_2):
-            # print(f'the winner is the {self.opponent.name}!')
             return -1
         else:
-            # print('an error has accurred! exiting...')
             exit()
 
     def print_deck(self):
@@ -375,25 +322,19 @@ class Blacksin:
         """
         main function to run the game with
         """
-        # print('\nstarting game... shuffling... handing out cards...')
-        # print(f'remember, you are aiming for nearest to: {self.target}')
+
         self.print_deck()
         self.handout_cards()
         turn = 0
         while(not self.player.has_stopped or not self.opponent.has_stopped):
             if (turn == 0):
                 if (not self.player.has_stopped):
-                    # self.opponent.print_info()
-                    # self.player.print_info()
                     self.get_player_input()
-                    # print()
             else:
                 if (not self.opponent.has_stopped):
-                    # print('opponent playing...')
                     self.opponent_play()
-                    # print()
             turn = 1 - turn
-        # print('\nand the winner is...')
+
         return self.check_for_winners()
 
 
